@@ -8,9 +8,21 @@ export const secretsApiSlice=apiSlice.injectEndpoints({
                 url: SECRETS_URL,
             }),
             keepUnusedDataFor:5
-        })
+        }),
+        getSecretByUserId:builder.query({
+            query:()=>({
+                url: `${SECRETS_URL}/finduser`
+            }),
+        }),
+        updateSecret:builder.mutation({
+            query: (data) => ({
+                url: `${SECRETS_URL}/update`,
+                method: 'PATCH',
+                body: data,
+            }),
+        }),
     }),
 })
 
 
-export const {useGetSecretsQuery}=secretsApiSlice;
+export const {useGetSecretsQuery,useGetSecretByUserIdQuery,useUpdateSecretMutation}=secretsApiSlice;

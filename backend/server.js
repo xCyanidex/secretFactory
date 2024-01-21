@@ -20,12 +20,24 @@ app.use(express.urlencoded({extended:true}))
 app.use(cookieParser());
 
 
-app.get('/', (req, res) => {
-    res.send('Api is running');
-});
+
 
 app.use('/api/secrets',secretRoutes);
 app.use('/api/users', useRoutes);
+
+if(process.env.NODE_ENV==='production'){
+    app.use(express.static(path.joing(__dirname,'/frontend/build')))
+
+
+    app.get('*',(req,res)=>
+    res.send(path.resolve(__dirname,'frontend','build','index.html'))
+    )
+}else {
+    app.get('/', (req, res) => {
+        res.send('Api is running');
+    });
+}
+
 
 app.use(errorHandler);
 app.use(notFound)

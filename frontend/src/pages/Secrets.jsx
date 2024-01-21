@@ -5,8 +5,6 @@ import { useGetSecretsQuery } from "../slices/secretsApiSlice";
 const Secrets = () => {
   const {data:secrets,isLoading,error}=useGetSecretsQuery();
 
- 
-     
   return (
     <>
       {isLoading ? (

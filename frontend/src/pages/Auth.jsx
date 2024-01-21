@@ -1,68 +1,63 @@
 import { useEffect, useState } from "react";
-import { Link,useLocation,useNavigate } from "react-router-dom";
-import {useDispatch,useSelector} from 'react-redux';
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation, useRegisterMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 
-
 const Auth = () => {
-  const [email,setEmail]=useState('');
-  const [password,setPassword]=useState('');
-  const [confirmPassword,setConfirmPassword]=useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const dispatch=useDispatch();
-  const navigate=useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const [login,{isLoading}]=useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
 
   const [register] = useRegisterMutation();
-  const {userInfo}=useSelector((state)=>state.auth);
-  const {search}=useLocation();
-  const sp=new URLSearchParams(search);
-  const redirect=sp.get('redirect') || '/secrets';
+  const { userInfo } = useSelector((state) => state.auth);
+  const { search } = useLocation();
+  const sp = new URLSearchParams(search);
+  const redirect = sp.get("redirect") || "/secrets";
 
-  useEffect(()=>{
-if(userInfo){
-  navigate(redirect);
-}
-  },[userInfo,redirect,navigate])
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [userInfo, redirect, navigate]);
 
-    const [userReg,setUserReg]=useState(false);
-    const toggleUserReg = () => {
-      setUserReg((prevUserReg) => !prevUserReg);
-    };
+  const [userReg, setUserReg] = useState(false);
+  const toggleUserReg = () => {
+    setUserReg((prevUserReg) => !prevUserReg);
+  };
 
-    const submitHandlerLogin=async (e)=>{
+  const submitHandlerLogin = async (e) => {
+    e.preventDefault();
 
-      e.preventDefault();
-     
+    try {
+      const res = await login({ email, password }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      navigate(redirect);
+    } catch (error) {
+      alert(`${error?.data.message}` || `${error?.error}`);
+    }
+  };
+
+  const submitHandlerRegister = async (e) => {
+    e.preventDefault();
+    if (password != confirmPassword) {
+      alert("password and confirm password do not match");
+      return;
+    } else {
       try {
-        const res=await login({email,password}).unwrap();
-        dispatch(setCredentials({...res,}))
+        const res = await register({ email, password }).unwrap();
+        dispatch(setCredentials({ ...res }));
         navigate(redirect);
       } catch (error) {
         alert(`${error?.data.message}` || `${error?.error}`);
-
       }
     }
-
-        const submitHandlerRegister = async (e) => {
-          e.preventDefault();
-if(password!=confirmPassword){
-  alert("password and confirm password do not match");
-  return;
-}else{
-        try {
-          const res = await register({ email, password }).unwrap();
-          dispatch(setCredentials({ ...res }));
-          navigate(redirect);
-        } catch (error) {
-          alert(`${error?.data.message}` || `${error?.error}`);
-        } 
-}
-
-  
-        };
+  };
   return (
     <>
       <div className="max-w-2xl mx-auto h-screen flex justify-center items-center">

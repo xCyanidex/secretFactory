@@ -7,9 +7,10 @@ import {useSelector,useDispatch} from 'react-redux';
 
 
 const Navbar = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
+  const { userInfo } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [logoutApiCall]=useLogoutMutation();
 
   const logoutHandler= async ()=>{
@@ -28,7 +29,7 @@ const Navbar = () => {
       </div>
       <div className="navbar-end">
         <Link to={"/add-secret"} className="btn mx-2">
-          Add a secret
+          Manage Secret
         </Link>
         <button onClick={logoutHandler} className="btn">
           Logout

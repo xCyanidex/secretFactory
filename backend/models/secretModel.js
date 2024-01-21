@@ -9,11 +9,11 @@
             type: String,
             required: true,
         },
-            user: {
+        user: {
                 type: mongoose.Schema.Types.ObjectId,
                 required: true,
-                ref: 'User',
-            },
+            ref: 'User',
+        },
 
     },
     {
